@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passaginhas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <div>
+            <label for="companyName">Nome da empresa cliente</label>
+            <input type="text" id="companyName" required placeholder="Nome da empresa cliente">
+        </div>
+        <div>
+            <label for="passengerName">Nome do passageiro</label>
+            <input type="text" id="passengerName" required placeholder="Nome do passageiro">
+        </div>
+        <div>
+            <label for="card-number">Número do cartão</label>
+            <input type="text" id="card-number" required placeholder="Número do cartão">
+        </div>
+        <div>
+            <label for="passenger-quantity">Quantidade de passagem disponível</label>
+            <input type="number" id="passenger-quantity" required placeholder="Quantidade de passagem disponível">
+        </div>
+        <button id="create-qr-code">Gerar Cartão</button>
+        <div class="card">
+            <div>
+                <div id="qrcode"></div>
+            </div>
+            <div>
+                <div>Nome da empresa cliente: <span id="companyNameSpan"></span></div>
+                <div>Nome do passageiro: <span id="passengerNameSpan"></span></div>
+                <div>Número do cartão: <span id="cardNumberSpan"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
