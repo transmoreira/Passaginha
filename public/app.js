@@ -1,4 +1,9 @@
+let loc
+
 document.addEventListener('DOMContentLoaded', function () {
+	navigator.geolocation.getCurrentPosition((position) => {
+		document.getElementById('location').innerHTML = JSON.stringify(position)
+	})
 	const scanner = new Html5Qrcode('reader')
 
 	function onScanSuccess(decodedText) {

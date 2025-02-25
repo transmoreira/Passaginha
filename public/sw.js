@@ -43,7 +43,7 @@ self.addEventListener('sync', (event) => {
 	}
 })
 
-async function obterDadosPendentes() {
+/*async function obterDadosPendentes() {
 	return new Promise((resolve, reject) => {
 		const tx = db.transaction('pendentes', 'readonly')
 		const store = tx.objectStore('pendentes')
@@ -51,7 +51,7 @@ async function obterDadosPendentes() {
 		request.onsuccess = () => resolve(request.result)
 		request.onerror = () => reject('Erro ao obter dados pendentes')
 	})
-}
+}*/
 
 // Função para sincronizar dados do IndexedDB
 async function syncDadosComServidor() {
@@ -70,7 +70,7 @@ async function syncDadosComServidor() {
 				})
 
 				// Remover o item do IndexedDB após o envio bem-sucedido
-				await removerDado(data.id)
+				await removerDado(data.id, db)
 			} catch (error) {
 				console.error('Erro ao sincronizar dados:', error)
 			}
@@ -93,7 +93,7 @@ function openDatabase() {
 	})
 }
 
-async function removerDado(id) {
+async function removerDado(id, db) {
 	return new Promise((resolve, reject) => {
 		const tx = db.transaction('pendentes', 'readwrite')
 		const store = tx.objectStore('pendentes')
