@@ -36,3 +36,35 @@ button {
 	font-weight: bold;
 	color: green;
 }
+
+.message {
+	font-weight: 900;
+	font-size: 25px;
+	color: #fff;
+	animation: fadeIn 0.2s linear;
+	width: 100dvw;
+	height: 100dvh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+.success {
+	background-color: green;
+}
+
+.fail {
+	background-color: crimson;
+}
+
+@keyframes fadeIn {
+	from {
+		width: 0dvw;
+		height: 0dvh;
+	}
+	to {
+		width: 100dvw;
+		height: 100dvh;
+	}
+}

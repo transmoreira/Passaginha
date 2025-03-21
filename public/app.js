@@ -14,6 +14,18 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 	async function onScanSuccess(decodedText) {
 		scanner.stop() // Para a câmera após a leitura
+		const cards = JSON.parse(localStorage.getItem('cards') || '[]')
+		const card = cards.find((card) => card.card_number === decodedText)
+		if (!card) {
+			showMessage('QRCode inválido', false)
+			return
+		}
+
+		if (card.amount < 1) {
+			showMessage('Saldo insuficiente', false)
+			return
+		}
+
 		const data = {
 			card_number: decodedText,
 			value: -1,
@@ -38,6 +50,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 				reg.sync.register('sync-dados')
 			})
 		}
+		card.amount--
+		showMessage('Saldo restante ' + card.amount, true)
+		localStorage.setItem('cards', JSON.stringify(cards))
 	}
 
 	function onScanFailure(error) {
@@ -72,7 +87,10 @@ function openDatabase() {
 }
 try {
 	navigator.serviceWorker.ready.then((reg) => {
-		reg.sync.register('sync-dados').then((a) => console.log('Sincronização registrada', a))
+		reg.sync.register('sync-dados').then((a) => {
+			console.log('Sincronização registrada', a)
+			load()
+		})
 	})
 } catch (error) {}
 
@@ -80,4 +98,24 @@ if (window.matchMedia('(display-mode: standalone)').matches) {
 	console.log('O PWA está instalado e rodando no modo standalone.')
 } else {
 	console.log('O PWA não está instalado ou está rodando no navegador.')
+}
+
+const load = () => {
+	fetcher('/card').then((data) => {
+		localStorage.setItem('cards', JSON.stringify(data))
+	})
+}
+
+load()
+
+setInterval(load, 1000 * 60)
+
+const showMessage = (message, success) => {
+	const div = document.createElement('div')
+	div.className = success ? 'message success' : 'message fail'
+	div.textContent = message
+	document.body.appendChild(div)
+	setTimeout(() => {
+		div.remove()
+	}, 1000 * 3)
 }

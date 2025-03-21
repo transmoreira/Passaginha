@@ -91,7 +91,7 @@ td {
 	border: 8px solid green;
 	border-radius: 50%;
 	border-top-color: transparent;
-	animation: loading 1s infinite linear;
+	animation: loading 0.5s infinite linear;
 	display: flex;
 }
 
