@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passaginhas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Passaginhas</h1>
+    <div class="add-card">
+        <div>
+            <label for="companyName">Nome da empresa cliente</label>
+            <input type="text" id="companyName" required placeholder="Nome da empresa cliente">
+        </div>
+        <div>
+            <label for="companyMail">Email</label>
+            <input type="text" id="companyMail" required placeholder="Email">
+        </div>
+        <div>
+            <label for="passengerName">Nome do passageiro</label>
+            <input type="text" id="passengerName" required placeholder="Nome do passageiro">
+        </div>
+        <!-- <div>
+            <label for="passenger-quantity">Quantidade disponível</label>
+            <input type="number" id="passenger-quantity" required placeholder="Quantidade de passagem disponível">
+        </div> -->
+        <button id="create-card">Gerar Cartão</button>
+
+    </div>
+    <table id="table-cards">
+        <thead>
+            <tr>
+                <th>EMPRESA</th>
+                <th>EMAIL</th>
+                <th>PASSAGEIRO</th>
+                <th>NUMERO</th>
+                <th>SALDO</th>
+                <th>AÇÃO</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div class="card" style="display: none;">
+        <div>
+            <div id="qrcode" style="padding: 8px; background-color: #fff;"></div>
+        </div>
+        <div style="flex: 1;">
+            <div class="wrap">Empresa <span id="companyNameSpan"></span></div>
+            <div class="wrap">Passageiro: <span id="passengerNameSpan"></span></div>
+            <div class="wrap">Número do cartão: <span id="cardNumberSpan"></span></div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>

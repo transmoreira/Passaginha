@@ -1,5 +1,5 @@
 const CACHE_NAME = 'my-cache-v1'
-const urlsToCache = ['/index.html', '/styles.css', '/app.js', 'favicon.ico', 'sw.js']
+const urlsToCache = ['/index.html', '/styles.css', '/app.js', 'favicon.ico', 'sw.js', '/img/icon-192x192.png', '/img/icon-512x512.png']
 
 self.addEventListener('install', (event) => {
 	console.log('Service Worker instalado')
@@ -63,7 +63,7 @@ async function syncDadosComServidor() {
 		const result = getAll.result
 		for (const data of result) {
 			try {
-				await fetch('/api/save', {
+				await fetcher('/credit', {
 					method: 'POST',
 					body: JSON.stringify(data),
 					headers: { 'Content-Type': 'application/json' },

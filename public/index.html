@@ -7,13 +7,14 @@
     <title>Leitor de passagem</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/html5-qrcode"></script>
+    <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
     <p id="location"></p>
     <div id="reader"></div>
     <p id="output"></p>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
     <script>
         if ('serviceWorker' in navigator && 'SyncManager' in window) {
             navigator.serviceWorker.register('/sw.js')

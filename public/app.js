@@ -1,14 +1,43 @@
-let loc
+import { fetcher } from './fetcher.js'
 
-document.addEventListener('DOMContentLoaded', function () {
-	navigator.geolocation.getCurrentPosition((position) => {
-		document.getElementById('location').innerHTML = JSON.stringify(position)
+const getPosition = () =>
+	new Promise((resolve, reject) => {
+		navigator.geolocation.getCurrentPosition((position) => {
+			resolve(position)
+		})
 	})
+
+document.addEventListener('DOMContentLoaded', async function () {
+	const position = await getPosition()
+	console.log(position)
 	const scanner = new Html5Qrcode('reader')
 
-	function onScanSuccess(decodedText) {
-		document.getElementById('output').innerText = 'QR Code lido: ' + decodedText
+	async function onScanSuccess(decodedText) {
 		scanner.stop() // Para a câmera após a leitura
+		const data = {
+			card_number: decodedText,
+			value: -1,
+			...position,
+		}
+		if (navigator.onLine) {
+			// Se online, envia diretamente
+			data.description = 'Embarque Online'
+			await fetcher('/credit', {
+				method: 'POST',
+				body: JSON.stringify(data),
+				headers: { 'Content-Type': 'application/json' },
+			})
+		} else {
+			// Se offline, salva no IndexedDB
+			data.description = 'Embarque Offline'
+			const db = await openDatabase()
+			const tx = db.transaction('pendentes', 'readwrite')
+			tx.objectStore('pendentes').add(data)
+
+			navigator.serviceWorker.ready.then((reg) => {
+				reg.sync.register('sync-dados')
+			})
+		}
 	}
 
 	function onScanFailure(error) {
@@ -25,35 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		onScanSuccess,
 		onScanFailure
 	)
-
-	// Botão para parar o scanner
-	// document.getElementById('stopButton').addEventListener('click', function () {
-	// 	scanner.stop()
-	// })
-})
-
-document.querySelector('#salvarBtn')?.addEventListener('click', async () => {
-	const dados = { nome: document.querySelector('#dataInput').value, info: 'Salvo', date: new Date().toLocaleString('pt-BR') }
-
-	if (navigator.onLine) {
-		// Se online, envia diretamente
-		dados.info = 'Enviado Online'
-		await fetch('/api/save', {
-			method: 'POST',
-			body: JSON.stringify(dados),
-			headers: { 'Content-Type': 'application/json' },
-		})
-	} else {
-		// Se offline, salva no IndexedDB
-		dados.info = 'Salvo Offline'
-		const db = await openDatabase()
-		const tx = db.transaction('pendentes', 'readwrite')
-		tx.objectStore('pendentes').add(dados)
-
-		navigator.serviceWorker.ready.then((reg) => {
-			reg.sync.register('sync-dados')
-		})
-	}
 })
 
 // Função para abrir o IndexedDB
@@ -75,3 +75,9 @@ try {
 		reg.sync.register('sync-dados').then((a) => console.log('Sincronização registrada', a))
 	})
 } catch (error) {}
+
+if (window.matchMedia('(display-mode: standalone)').matches) {
+	console.log('O PWA está instalado e rodando no modo standalone.')
+} else {
+	console.log('O PWA não está instalado ou está rodando no navegador.')
+}
